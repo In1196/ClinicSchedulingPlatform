@@ -1,0 +1,28 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Node dependencies and build output
+node_modules/
+client/dist/
+client/dist-ssr/
+*.local
+npm-debug.log*
+
+# Local Docker data (Postgres volumes, etc.)
+docker/data/
+postgres-data/
+pgdata/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+.idea/
+
+#Copilot
+.github/copilot-instructions.md
+

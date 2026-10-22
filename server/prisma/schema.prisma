@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+enum UserRole {
+  MANAGER
+  FRONT_DESK
+  PROVIDER
+}
+
+enum ProviderType {
+  PHYSICIAN
+  NURSE_PRACTITIONER
+  PHYSICIAN_ASSISTANT
+}
+
+enum AvailabilityKind {
+  WEEKLY
+  DATE_SPECIFIC
+}
+
+enum AppointmentSetting {
+  SCHEDULED
+  URGENT_CARE
+}
+
+enum AppointmentType {
+  EXTENDED
+  STANDARD
+}
+
+enum AppointmentStatus {
+  BOOKED
+  COMPLETED
+  NO_SHOW
+  CANCELLED
+}
+
+model User {
+  id           String        @id @default(uuid()) @db.Uuid
+  displayName  String
+  role         UserRole
+  providerId   String?       @unique @db.Uuid
+  provider     Provider?     @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  appointments Appointment[] @relation("AppointmentCreator")
+  auditEvents  AuditEvent[]
+  createdAt    DateTime      @default(now()) @db.Timestamptz(3)
+}
+
+model Provider {
+  id                  String               @id @default(uuid()) @db.Uuid
+  displayName         String
+  providerType        ProviderType
+  credential          String
+  canDoExtendedVisits Boolean              @default(false)
+  pediatricEligible   Boolean              @default(true)
+  isActive            Boolean              @default(true)
+  user                User?
+  availabilityWindows AvailabilityWindow[]
+  appointments        Appointment[]
+  createdAt           DateTime             @default(now()) @db.Timestamptz(3)
+  updatedAt           DateTime             @updatedAt @db.Timestamptz(3)
+
+  @@index([providerType, isActive])
+}
+
+model Patient {
+  id           String        @id @default(uuid()) @db.Uuid
+  displayName  String
+  isPediatric  Boolean       @default(false)
+  isActive     Boolean       @default(true)
+  coverages    Coverage[]
+  appointments Appointment[]
+  createdAt    DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime      @updatedAt @db.Timestamptz(3)
+}
+
+model Coverage {
+  id             String        @id @default(uuid()) @db.Uuid
+  patientId      String        @db.Uuid
+  patient        Patient       @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  startsOn       DateTime      @db.Date
+  endsOn         DateTime      @db.Date
+  coveredVisits  Int
+  reservedVisits Int           @default(0)
+  usedVisits     Int           @default(0)
+  appointments   Appointment[]
+  createdAt      DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime      @updatedAt @db.Timestamptz(3)
+
+  @@unique([id, patientId])
+  @@index([patientId, endsOn])
+}
+
+model AvailabilityWindow {
+  id               String           @id @default(uuid()) @db.Uuid
+  providerId       String           @db.Uuid
+  provider         Provider         @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  kind             AvailabilityKind
+  dayOfWeek        Int?
+  localDate        DateTime?        @db.Date
+  startMinuteOfDay Int
+  endMinuteOfDay   Int
+  isAvailable      Boolean          @default(true)
+  createdAt        DateTime         @default(now()) @db.Timestamptz(3)
+
+  @@index([providerId, dayOfWeek])
+  @@index([providerId, localDate])
+}
+
+model Appointment {
+  id            String             @id @default(uuid()) @db.Uuid
+  patientId     String             @db.Uuid
+  patient       Patient            @relation(fields: [patientId], references: [id], onDelete: Restrict)
+  coverageId    String             @db.Uuid
+  coverage      Coverage           @relation(fields: [coverageId, patientId], references: [id, patientId], onDelete: Restrict)
+  providerId    String             @db.Uuid
+  provider      Provider           @relation(fields: [providerId], references: [id], onDelete: Restrict)
+  setting       AppointmentSetting
+  type          AppointmentType
+  status        AppointmentStatus  @default(BOOKED)
+  startsAt      DateTime           @db.Timestamptz(3)
+  endsAt        DateTime           @db.Timestamptz(3)
+  bufferMinutes Int                @default(0)
+  createdById   String?            @db.Uuid
+  createdBy     User?              @relation("AppointmentCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt     DateTime           @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime           @updatedAt @db.Timestamptz(3)
+
+  @@index([startsAt, setting])
+  @@index([providerId, startsAt])
+  @@index([patientId, startsAt])
+}
+
+model AuditEvent {
+  id         String   @id @default(uuid()) @db.Uuid
+  actorId    String?  @db.Uuid
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String
+  entityType String
+  entityId   String   @db.Uuid
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([entityType, entityId, createdAt])
+  @@index([actorId, createdAt])
+}
