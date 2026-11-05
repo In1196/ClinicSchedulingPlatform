@@ -6,10 +6,11 @@
 - [x] Define the first-slice domain model and audit-event model. (2026-10-13: Recorded entities and integrity rules in PLANNING.md and D15.)
 - [x] Scaffold the repo: `client/` (React + Vite) and `server/` (Node + Express), plain JavaScript. (2026-09-18: Root npm workspace, client dev/build scripts, server health check endpoint at `/api/health` — validated with `npm install`, `npm run build:client`, and a manual server start/health check.)
 - [x] Set up PostgreSQL and Prisma; use a native PostgreSQL installation on this machine, support Docker Compose as an alternative, and write the first migration. (2026-10-15: Installed PostgreSQL 17.11, applied the Prisma 6.12.0 migration, generated the client, verified the `btree_gist` extension and overlap constraint, and confirmed a cross-schedule overlap is rejected.)
-- [ ] Before moving forward with implementation, review the Prisma files, understand the database setup, and practice interacting with PostgreSQL in pgAdmin.
-- [ ] Add Zod validation at the API route boundary as a standard pattern for all endpoints.
+- [x] Before moving forward with implementation, review the Prisma files, understand the database setup, and practice interacting with PostgreSQL in pgAdmin. (2026-11-02)
+- [x] Add Zod validation at the API route boundary as a standard pattern for all endpoints. (2026-11-04: Created `server/src/schemas.js` with domain schemas, `server/src/middleware/validate.js` with validation middleware, and `server/src/routes/providers.js` as an example route using the validation pattern. Verified schemas validate and strip unknown fields correctly.)
 - [ ] Set up Vitest/Jest + Supertest for the server, and React Testing Library for the client, running scheduling-related tests against a real PostgreSQL database (native or Docker).
 - [x] Create `.env.example` with placeholder values only; confirm `.gitignore` excludes `node_modules`, `.env`, and local Docker data. (2026-10-13: Added root placeholder settings; existing ignore rules already cover these paths.)
+
 
 ## Scheduling
 
