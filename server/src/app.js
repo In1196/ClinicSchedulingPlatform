@@ -1,4 +1,5 @@
 import express from 'express';
+import providersRouter from './routes/providers.js';
 
 // The Express app is created here, separately from server.js, so that
 // automated tests can import and exercise the app without starting a
@@ -13,6 +14,9 @@ export function createApp() {
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
   });
+
+  // Routes
+  app.use('/api/providers', providersRouter);
 
   return app;
 }
