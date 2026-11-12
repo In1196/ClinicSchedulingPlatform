@@ -38,6 +38,8 @@
 
 ## Discovered During Work
 
+- [x] 2026-11-11: Align equivalent Zod field names with Prisma for provider eligibility, coverage, appointments, and availability.
+- [x] 2026-11-11: Create Copilot notes listing the proposed server files and explaining how routes and services relate.
 - [ ] 2026-10-07: Delete the temporary `docs/copilot-notes/` folder (personal Copilot advice notes) before the project is finalized.
 - [ ] 2026-10-13: Update the existing development-only `source-map-js` dependency from 1.2.1 to a fixed release (>=1.2.2) for GHSA-68fv-2mgg-jv7q; confirmed present in the baseline lockfile.
 - [x] 2026-10-22: Re-themed the project as an original portfolio project (fictional family-medicine clinic with urgent care, 16 providers); removed source-company references, brand assets, original PRD, and the old migration; wrote a new PRD and a fresh initial migration (D16).

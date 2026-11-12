@@ -45,8 +45,8 @@
     - 1 failure case
 
 ### Task Completion
-- **Mark completed tasks in `TASK.md`** immediately after finishing them.
-- Add new sub-tasks or TODOs discovered during development to `TASK.md` under a “Discovered During Work” section.
+- **Mark completed tasks in `TASKS.md`** immediately after finishing them.
+- Add new sub-tasks or TODOs discovered during development to `TASKS.md` under a “Discovered During Work” section.
 
 ## Documentation and Accessibility
 - **Keep setup instructions and required environment variables accurate** in `README.md`. Update them when changes are made to the project structure or dependencies, when new features are added, or setup steps are modified.
@@ -58,7 +58,12 @@
 - **Never assume missing context. Ask questions if uncertain.**
 - **Never hallucinate libraries or functions** – only use known, verified packages.
 - **Always confirm file paths and module names** exist before referencing them in code or tests.
-- **Never delete or overwrite existing code** unless explicitly instructed to or if part of a task from `TASK.md`.
+- **Never delete or overwrite existing code** unless explicitly instructed to or if part of a task from `TASKS.md`.
+
+### Hand-Written Code Rule
+- **Notify the user when a requested piece of code is something they should write by hand** for learning or portfolio purposes, before writing it. This applies especially to: scheduling/overlap-prevention logic, coverage enforcement and visit counting, availability resolution, RBAC/authorization enforcement, and database transaction design.
+- **When the user asks AI to write such code directly, pause and flag it**: state that this is core logic the user should write themselves, explain why in one or two sentences, and offer to (a) guide the user through writing it, or (b) write it only if the user confirms.
+- **Boilerplate is exempt**: CRUD route skeletons, Zod schemas, Prisma schema drafts, presentational React components, test scaffolding, config files, and documentation may be written without this notification.
 
 
 

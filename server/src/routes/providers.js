@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/', validate('body', createProviderSchema), (req, res) => {
   // At this point, req.body is validated and safe
   // req.body contains only: firstName, lastName, providerType,
-  // hasExtendedVisitCredential, canSeePediatric, isActive
+  // canDoExtendedVisits, pediatricEligible, isActive
   // Any extra fields sent by the client are stripped out
 
   const { firstName, lastName, providerType } = req.body;
