@@ -8,7 +8,7 @@ const router = express.Router();
 // Creates a new provider with validated input
 router.post('/', validate('body', createProviderSchema), (req, res) => {
   // At this point, req.body is validated and safe
-  // req.body contains only: firstName, lastName, providerType,
+  // req.body contains only: firstName, lastName, displayName, providerType, credential,
   // canDoExtendedVisits, pediatricEligible, isActive
   // Any extra fields sent by the client are stripped out
 

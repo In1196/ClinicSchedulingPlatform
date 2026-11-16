@@ -38,6 +38,8 @@
 
 ## Discovered During Work
 
+- [ ] 2026-11-12: Finish Zod and Prisma alignment after deciding authentication, coverage handling, appointment-owned fields, and migration of existing user/provider records.
+- [x] 2026-11-12: Align provider, appointment, and availability request fields where independent of those decisions; add optional appointment reason and migration; comment out schedule-change schema.
 - [x] 2026-11-11: Align equivalent Zod field names with Prisma for provider eligibility, coverage, appointments, and availability.
 - [x] 2026-11-11: Create Copilot notes listing the proposed server files and explaining how routes and services relate.
 - [ ] 2026-10-07: Delete the temporary `docs/copilot-notes/` folder (personal Copilot advice notes) before the project is finalized.

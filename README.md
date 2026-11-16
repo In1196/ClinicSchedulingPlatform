@@ -75,6 +75,14 @@ npm run db:generate --workspace server
 
 The separate shadow database is used by Prisma during development migrations; the application role does not need permission to create databases. The migration installs PostgreSQL's `btree_gist` extension for database-enforced cross-schedule overlap prevention. Keep the connection local, do not commit `.env`, and use synthetic records only.
 
+The optional appointment `reason` field is intended for scheduling context and must be treated as sensitive. The example provider route does not persist data or implement authentication. User credentials and provider name fields in the database, and coverage-counter request handling, remain deferred.
+
+Run the server's schema tests with:
+
+```powershell
+node --test server/tests/schemas.test.js
+```
+
 ## Linting
 
 ESLint checks JavaScript/JSX source for common mistakes (unused variables, invalid conditions, React Hook rule violations) without running the code. Run it across both the client and server:

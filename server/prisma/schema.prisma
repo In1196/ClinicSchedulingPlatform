@@ -127,6 +127,7 @@ model Appointment {
   status        AppointmentStatus  @default(BOOKED)
   startsAt      DateTime           @db.Timestamptz(3)
   endsAt        DateTime           @db.Timestamptz(3)
+  reason        String?
   bufferMinutes Int                @default(0)
   createdById   String?            @db.Uuid
   createdBy     User?              @relation("AppointmentCreator", fields: [createdById], references: [id], onDelete: SetNull)

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 // User/Auth schemas
 export const createUserSchema = z.object({
+  displayName: z.string().min(1, 'Display name is required'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   role: z.enum(['practice_manager', 'front_desk', 'provider'], {
@@ -14,9 +15,11 @@ export const createUserSchema = z.object({
 export const createProviderSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  providerType: z.enum(['md', 'do', 'pa', 'np'], {
+  displayName: z.string().min(1, 'Display name is required'),
+  providerType: z.enum(['PHYSICIAN', 'NURSE_PRACTITIONER', 'PHYSICIAN_ASSISTANT'], {
     errorMap: () => ({ message: 'Invalid provider type' })
   }),
+  credential: z.string().min(1, 'Credential is required'),
   canDoExtendedVisits: z.boolean().default(false),
   pediatricEligible: z.boolean().default(false),
   isActive: z.boolean().default(true),
@@ -65,58 +68,57 @@ export const createAppointmentSchema = z.object({
   patientId: z.string().uuid('Patient ID must be a valid UUID'),
   providerId: z.string().uuid('Provider ID must be a valid UUID'),
   coverageId: z.string().uuid('Coverage ID must be a valid UUID'),
-  setting: z.enum(['scheduled', 'urgent_care'], {
-    errorMap: () => ({ message: 'Schedule type must be scheduled or urgent_care' })
+  setting: z.enum(['SCHEDULED', 'URGENT_CARE'], {
+    errorMap: () => ({ message: 'Schedule type must be SCHEDULED or URGENT_CARE' })
   }),
-  type: z.enum(['standard', 'extended'], {
-    errorMap: () => ({ message: 'Visit type must be standard or extended' })
+  type: z.enum(['STANDARD', 'EXTENDED'], {
+    errorMap: () => ({ message: 'Visit type must be STANDARD or EXTENDED' })
   }),
   startsAt: z.string().datetime('Must be a valid ISO 8601 datetime'),
   endsAt: z.string().datetime('Must be a valid ISO 8601 datetime'),
-  reason: z.string().min(1, 'Reason is required').max(500, 'Reason must be 500 characters or less').optional(),
+  reason: z.string().min(1, 'Reason is required').max(500, 'Reason must be 500 characters or less').nullable().optional(),
 }).refine(
   (data) => new Date(data.startsAt) < new Date(data.endsAt),
   { message: 'Start time must be before end time', path: ['endsAt'] }
 );
 
 export const updateAppointmentSchema = z.object({
-  status: z.enum(['scheduled', 'cancelled', 'completed', 'no_show'], {
+  status: z.enum(['BOOKED', 'CANCELLED', 'COMPLETED', 'NO_SHOW'], {
     errorMap: () => ({ message: 'Invalid appointment status' })
   }),
-  reason: z.string().max(500).optional(),
+  reason: z.string().max(500).nullable().optional(),
 });
 
 // Availability schemas
 export const createAvailabilitySchema = z.object({
   providerId: z.string().uuid('Provider ID must be a valid UUID'),
-  dayOfWeek: z.number().int().min(0).max(6).optional(),
-  startTime: z.string().time('Must be a valid time (HH:MM)'),
-  endTime: z.string().time('Must be a valid time (HH:MM)'),
-  localDate: z.string().date().optional(),
+  kind: z.enum(['WEEKLY', 'DATE_SPECIFIC']),
+  dayOfWeek: z.number().int().min(0).max(6).nullable().optional(),
+  localDate: z.string().date().nullable().optional(),
+  startMinuteOfDay: z.number().int().min(0).max(1439),
+  endMinuteOfDay: z.number().int().min(1).max(1440),
+  isAvailable: z.boolean().default(true),
 }).refine(
-  (data) => {
-    if (data.dayOfWeek === undefined && !data.localDate) {
-      return false;
-    }
-    return true;
-  },
-  { message: 'Must provide either dayOfWeek or specificDate' }
+  (data) => data.kind === 'WEEKLY'
+    ? data.dayOfWeek != null && data.localDate == null
+    : data.localDate != null && data.dayOfWeek == null,
+  { message: 'WEEKLY requires dayOfWeek; DATE_SPECIFIC requires localDate' }
 ).refine(
-  (data) => data.startTime < data.endTime,
-  { message: 'Start time must be before end time', path: ['endTime'] }
+  (data) => data.startMinuteOfDay < data.endMinuteOfDay,
+  { message: 'Start time must be before end time', path: ['endMinuteOfDay'] }
 );
 
 // Schedule-change request schemas
-export const createScheduleChangeRequestSchema = z.object({
-  providerId: z.string().uuid('Provider ID must be a valid UUID'),
-  requestType: z.enum(['unavailable', 'swap', 'additional_shift'], {
-    errorMap: () => ({ message: 'Invalid request type' })
-  }),
-  startTime: z.string().datetime('Must be a valid ISO 8601 datetime'),
-  endTime: z.string().datetime('Must be a valid ISO 8601 datetime'),
-  reason: z.string().min(1, 'Reason is required').max(500, 'Reason must be 500 characters or less'),
-  requestedSwapWith: z.string().uuid().optional(),
-}).refine(
-  (data) => new Date(data.startTime) < new Date(data.endTime),
-  { message: 'Start time must be before end time', path: ['endTime'] }
-);
+// export const createScheduleChangeRequestSchema = z.object({
+//   providerId: z.string().uuid('Provider ID must be a valid UUID'),
+//   requestType: z.enum(['unavailable', 'swap', 'additional_shift'], {
+//     errorMap: () => ({ message: 'Invalid request type' })
+//   }),
+//   startTime: z.string().datetime('Must be a valid ISO 8601 datetime'),
+//   endTime: z.string().datetime('Must be a valid ISO 8601 datetime'),
+//   reason: z.string().min(1, 'Reason is required').max(500, 'Reason must be 500 characters or less'),
+//   requestedSwapWith: z.string().uuid().optional(),
+// }).refine(
+//   (data) => new Date(data.startTime) < new Date(data.endTime),
+//   { message: 'Start time must be before end time', path: ['endTime'] }
+// );
