@@ -9,7 +9,7 @@ A portfolio project: a scheduling platform for a fictional family-medicine clini
 
 ## Setup
 
-Requirements: Node.js (v18 or later) and npm. Prisma database scripts use Node.js's `--env-file` option and require Node.js 20.6 or later.
+Requirements: Node.js (v22.12 or later) and npm. This version supports the current Vite and Vitest versions; Prisma database scripts also require Node.js 20.6 or later.
 
 Install dependencies for both `client` and `server` from the repository root:
 
@@ -39,7 +39,7 @@ The backend listens on port `3001` by default and exposes a health check at `GET
 npm run build:client
 ```
 
-Product requirements are in `docs/prd/clinic-scheduling-platform-prd.md`. The first-slice role permissions and data model are summarized in `PLANNING.md`. This project supports a native PostgreSQL installation on this machine and Docker Compose as an alternative on other machines; both use PostgreSQL 17.11 with the same Prisma schema and migrations. Automated test setup is still pending. Copy `.env.example` to `.env` and replace the placeholder password before starting a database. Never use real patient data.
+Product requirements are in `docs/prd/clinic-scheduling-platform-prd.md`. The first-slice role permissions and data model are summarized in `PLANNING.md`. This project supports a native PostgreSQL installation on this machine and Docker Compose as an alternative on other machines; both use PostgreSQL 17.11 with the same Prisma schema and migrations. Copy `.env.example` to `.env` and replace the placeholder password before starting a database. Never use real patient data.
 
 ### Database setup
 
@@ -77,11 +77,13 @@ The separate shadow database is used by Prisma during development migrations; th
 
 The optional appointment `reason` field is intended for scheduling context and must be treated as sensitive. The example provider route does not persist data or implement authentication. User credentials and provider name fields in the database, and coverage-counter request handling, remain deferred.
 
-Run the server's schema tests with:
+Run the server and client tests from the repository root:
 
 ```powershell
-node --test server/tests/schemas.test.js
+npm test
 ```
+
+To run one workspace's tests, use `npm run test:server` or `npm run test:client`. Server schema and API tests run without a database. Tests for scheduling transactions and overlap constraints must use a real PostgreSQL database; those will be added alongside the scheduling implementation.
 
 ## Linting
 

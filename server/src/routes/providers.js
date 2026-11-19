@@ -8,18 +8,18 @@ const router = express.Router();
 // Creates a new provider with validated input
 router.post('/', validate('body', createProviderSchema), (req, res) => {
   // At this point, req.body is validated and safe
-  // req.body contains only: firstName, lastName, displayName, providerType, credential,
-  // canDoExtendedVisits, pediatricEligible, isActive
+  // req.body contains only: displayName, providerType, credential, canDoExtendedVisits,
+  // pediatricEligible, isActive
   // Any extra fields sent by the client are stripped out
 
-  const { firstName, lastName, providerType } = req.body;
+  const { displayName } = req.body;
 
   // Next step: save to database with Prisma
   // const provider = await prisma.provider.create({ data: req.body });
 
   res.json({
     success: true,
-    message: `Provider ${firstName} ${lastName} created`,
+    message: `Provider ${displayName} created`,
     data: req.body,
   });
 });

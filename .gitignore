@@ -5,6 +5,7 @@
 
 # Node dependencies and build output
 node_modules/
+.vitest/
 client/dist/
 client/dist-ssr/
 *.local

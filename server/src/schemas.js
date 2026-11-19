@@ -3,25 +3,21 @@ import { z } from 'zod';
 // User/Auth schemas
 export const createUserSchema = z.object({
   displayName: z.string().min(1, 'Display name is required'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  role: z.enum(['practice_manager', 'front_desk', 'provider'], {
-    errorMap: () => ({ message: 'Role must be practice_manager, front_desk, or provider' })
+  role: z.enum(['MANAGER', 'FRONT_DESK', 'PROVIDER'], {
+    errorMap: () => ({ message: 'Role must be MANAGER, FRONT_DESK, or PROVIDER' })
   }),
   providerId: z.string().uuid().optional(),
 });
 
 // Provider schemas
 export const createProviderSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
   displayName: z.string().min(1, 'Display name is required'),
   providerType: z.enum(['PHYSICIAN', 'NURSE_PRACTITIONER', 'PHYSICIAN_ASSISTANT'], {
     errorMap: () => ({ message: 'Invalid provider type' })
   }),
   credential: z.string().min(1, 'Credential is required'),
   canDoExtendedVisits: z.boolean().default(false),
-  pediatricEligible: z.boolean().default(false),
+  pediatricEligible: z.boolean().default(true),
   isActive: z.boolean().default(true),
 });
 
@@ -39,9 +35,8 @@ export const updatePatientSchema = createPatientSchema.partial();
 export const createCoverageSchema = z.object({
   patientId: z.string().uuid('Patient ID must be a valid UUID'),
   coveredVisits: z.number().int('Visit count must be a whole number').positive('Visit count must be positive'),
-  visitLimit: z.number().int().positive().nullable().default(null),
-  startsOn: z.string().datetime('Must be a valid ISO 8601 datetime'),
-  endsOn: z.string().datetime('Must be a valid ISO 8601 datetime'),
+  startsOn: z.string().date('Must be a valid YYYY-MM-DD date'),
+  endsOn: z.string().date('Must be a valid YYYY-MM-DD date'),
 }).refine(
   (data) => new Date(data.startsOn) < new Date(data.endsOn),
   { message: 'startsOn must be before endsOn', path: ['endsOn'] }
@@ -50,9 +45,8 @@ export const createCoverageSchema = z.object({
 export const updateCoverageSchema = z.object({
   patientId: z.string().uuid('Patient ID must be a valid UUID').optional(),
   coveredVisits: z.number().int('Visit count must be a whole number').positive('Visit count must be positive').optional(),
-  visitLimit: z.number().int().positive().nullable().optional(),
-  startsOn: z.string().datetime('Must be a valid ISO 8601 datetime').optional(),
-  endsOn: z.string().datetime('Must be a valid ISO 8601 datetime').optional(),
+  startsOn: z.string().date('Must be a valid YYYY-MM-DD date').optional(),
+  endsOn: z.string().date('Must be a valid YYYY-MM-DD date').optional(),
 }).refine(
   (data) => {
     if (data.startsOn && data.endsOn) {

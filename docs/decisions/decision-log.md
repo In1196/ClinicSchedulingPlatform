@@ -85,12 +85,13 @@ Entry format: Decision, Status, Date, Options considered, Reason, Trade-offs, Re
 - **Trade-offs:** Dependencies are hoisted to the root `node_modules`, which can hide a missing dependency declaration. Each workspace must declare what it imports.
 - **Revisit when:** The client and server need different Node versions or separate deployment pipelines.
 
-## D10. Test runner: Vitest or Jest (open)
+## D10. Test runner: Vitest
 
-- **Status:** Open. **Date:** 2026-09-14.
-- **Options considered:** Vitest, Jest. Supertest and React Testing Library are confirmed regardless.
-- **Reason:** Not yet decided. Vitest works naturally with Vite, which the client already uses.
-- **Revisit when:** The test setup task starts. State the choice and reason, then wait for approval.
+- **Status:** Confirmed. **Date:** 2026-11-17.
+- **Options considered:** Vitest, Jest. Supertest and React Testing Library are used for API and client behavior tests.
+- **Reason:** The client already uses Vite, and Vitest integrates with its configuration while also supporting the Node-based server tests.
+- **Trade-offs:** Vitest's current version requires a recent Node.js release; the documented minimum is Node.js 22.12.
+- **Revisit when:** A required testing integration is not supported or the project changes its frontend build tooling.
 
 ## D11. Git workflow: one session at a time, push to `main`
 

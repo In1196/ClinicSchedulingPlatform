@@ -60,6 +60,12 @@
 - **Always confirm file paths and module names** exist before referencing them in code or tests.
 - **Never delete or overwrite existing code** unless explicitly instructed to or if part of a task from `TASKS.md`.
 
+### Explicit Permission to Implement
+- **Do not implement changes without the user's explicit permission for the specific task.** A direct request to make a change grants permission for that change and its necessary tests, documentation, and setup; it does not authorize unrelated work.
+- Questions, requests for explanations or next steps, tool choices, supplied information, and tasks listed in `TASKS.md` are not permission to implement. If permission or scope is unclear, ask and wait.
+- If the user pauses to review or learn, stop implementation and wait for an explicit instruction to resume. Do not treat a later answer or acknowledgment as permission to resume.
+- Read-only investigation and explanations may be provided without implementation permission. Follow the separate hand-written code and unfamiliar-tool learning requirements even when implementation is authorized.
+
 ### Hand-Written Code Rule
 - **Notify the user when a requested piece of code is something they should write by hand** for learning or portfolio purposes, before writing it. This applies especially to: scheduling/overlap-prevention logic, coverage enforcement and visit counting, availability resolution, RBAC/authorization enforcement, and database transaction design.
 - **When the user asks AI to write such code directly, pause and flag it**: state that this is core logic the user should write themselves, explain why in one or two sentences, and offer to (a) guide the user through writing it, or (b) write it only if the user confirms.

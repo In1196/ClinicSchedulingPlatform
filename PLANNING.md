@@ -76,7 +76,7 @@ The product is a clinic scheduling system for a fictional family-medicine clinic
 - **ORM:** Prisma — declarative schema file and migrations, keeps the DB and code in agreement without requiring TypeScript.
 - **Validation:** Zod — server-side validation of all request input (appointments, coverage records, schedule-change requests, etc.). Validation happens at the route boundary before business logic runs.
 - **Local dev database:** PostgreSQL 17.11 installed natively on the current machine; Docker Compose pins the same version as an alternative for other machines. Both use the same schema and migrations, with separate application and Prisma shadow databases and connection settings supplied through environment variables.
-- **Testing:** Vitest (or Jest) for unit/service tests, Supertest for API endpoint tests, React Testing Library for frontend behavior tests. Tests that touch scheduling/overlap logic run against a real PostgreSQL database, whether it is installed natively or running in Docker.
+- **Testing:** Vitest for unit/service tests, Supertest for API endpoint tests, and React Testing Library for frontend behavior tests. Tests that touch scheduling/overlap logic run against a real PostgreSQL database, whether it is installed natively or running in Docker.
 - **Background jobs (introduced later, when needed):** BullMQ + Redis — for reminders (24–48h before appointment), Outlook sync, and provider-absence replacement search. Deferred until those features are actively being built, kept isolated in a `jobs/` folder.
 - **Explicitly deferred/skipped for now:** TypeScript, NestJS, managed auth providers (e.g., Auth0), and a full observability stack — these add real value but bring more new concepts/tooling than is useful at this stage. Hand-rolled sessions + RBAC middleware are used instead.
 
@@ -95,6 +95,7 @@ Record confirmed decisions here using this format. The reasoning, alternatives, 
 | Database | PostgreSQL, chosen over MongoDB, for transactional overlap prevention across the shared availability pool | Confirmed | 2026-09-14 |
 | ORM | Prisma, used with plain JavaScript (no TypeScript) | Confirmed | 2026-09-14 |
 | Validation | Zod, applied at the API route boundary | Confirmed | 2026-09-14 |
+| Test runner | Vitest, with Supertest for APIs and React Testing Library for the client. See D10 | Confirmed | 2026-11-17 |
 | Local dev/test database | Real PostgreSQL 17.11 for development and tests; native installation on the current machine, Docker Compose supported on other machines. See D14 | Confirmed | 2026-10-13 |
 | Background jobs | BullMQ + Redis, introduced later for reminders, Outlook sync, and provider-absence replacement search | Confirmed (deferred implementation) | 2026-09-14 |
 | TypeScript / NestJS / managed auth / observability | Explicitly skipped for now to keep code approachable and avoid unnecessary tooling overhead | Confirmed (deferred) | 2026-09-14 |

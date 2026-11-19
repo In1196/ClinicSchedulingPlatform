@@ -8,7 +8,7 @@
 - [x] Set up PostgreSQL and Prisma; use a native PostgreSQL installation on this machine, support Docker Compose as an alternative, and write the first migration. (2026-10-15: Installed PostgreSQL 17.11, applied the Prisma 6.12.0 migration, generated the client, verified the `btree_gist` extension and overlap constraint, and confirmed a cross-schedule overlap is rejected.)
 - [x] Before moving forward with implementation, review the Prisma files, understand the database setup, and practice interacting with PostgreSQL in pgAdmin. (2026-11-02)
 - [x] Add Zod validation at the API route boundary as a standard pattern for all endpoints. (2026-11-04: Created `server/src/schemas.js` with domain schemas, `server/src/middleware/validate.js` with validation middleware, and `server/src/routes/providers.js` as an example route using the validation pattern. Verified schemas validate and strip unknown fields correctly.)
-- [ ] Set up Vitest/Jest + Supertest for the server, and React Testing Library for the client, running scheduling-related tests against a real PostgreSQL database (native or Docker).
+- [x] Set up Vitest + Supertest for the server and React Testing Library for the client. (2026-11-17: Added server schema/API and client interaction tests; real-PostgreSQL scheduling tests remain in Validation.)
 - [x] Create `.env.example` with placeholder values only; confirm `.gitignore` excludes `node_modules`, `.env`, and local Docker data. (2026-10-13: Added root placeholder settings; existing ignore rules already cover these paths.)
 
 
@@ -38,12 +38,14 @@
 
 ## Discovered During Work
 
-- [ ] 2026-11-12: Finish Zod and Prisma alignment after deciding authentication, coverage handling, appointment-owned fields, and migration of existing user/provider records.
+- [x] 2026-11-18: Add a jsdom explanation to the testing notes.
+- [x] 2026-11-17: Require explicit user permission before implementing a specific task in the Copilot instructions.
+- [ ] 2026-11-12: Finish Zod and Prisma alignment after deciding authentication, coverage handling, appointment-owned fields, and migration of existing user/provider records. (2026-11-16: Authentication remains deferred; user validation matches Prisma fields and roles, provider validation and the example route use Prisma's displayName, pediatricEligible defaults match, and coverage inputs use Prisma's date-only fields and coveredVisits; counters remain server-managed.)
 - [x] 2026-11-12: Align provider, appointment, and availability request fields where independent of those decisions; add optional appointment reason and migration; comment out schedule-change schema.
 - [x] 2026-11-11: Align equivalent Zod field names with Prisma for provider eligibility, coverage, appointments, and availability.
 - [x] 2026-11-11: Create Copilot notes listing the proposed server files and explaining how routes and services relate.
 - [ ] 2026-10-07: Delete the temporary `docs/copilot-notes/` folder (personal Copilot advice notes) before the project is finalized.
-- [ ] 2026-10-13: Update the existing development-only `source-map-js` dependency from 1.2.1 to a fixed release (>=1.2.2) for GHSA-68fv-2mgg-jv7q; confirmed present in the baseline lockfile.
+- [x] 2026-10-13: Update the existing development-only `source-map-js` dependency from 1.2.1 to a fixed release (>=1.2.2) for GHSA-68fv-2mgg-jv7q; confirmed present in the baseline lockfile. (2026-11-17: Updated to 1.2.2; all installed instances resolve to the fixed version.)
 - [x] 2026-10-22: Re-themed the project as an original portfolio project (fictional family-medicine clinic with urgent care, 16 providers); removed source-company references, brand assets, original PRD, and the old migration; wrote a new PRD and a fresh initial migration (D16).
 - [ ] 2026-10-22: Scrub docs/copilot-notes/ of old-domain terms (deferred by the owner) or delete the folder.
 - [ ] 2026-10-22: Decide how to remove the original content from git history before the repository is made public (owner is deferring this).
